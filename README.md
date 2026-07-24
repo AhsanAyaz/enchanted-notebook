@@ -6,6 +6,8 @@ A speaker's magic notebook. You scribble a half-formed thought backstage — **t
 
 Built with **Angular 22**, **NestJS + Genkit (Gemini)**, and [`@codewithahsan/ngx-quill-ink`](https://www.npmjs.com/package/@codewithahsan/ngx-quill-ink) — the handwriting engine that renders streaming text as animated ink ([source](https://github.com/AhsanAyaz/ngx-quill-ink)).
 
+![Your thought on the page, the Storyteller's answer woven in beneath it and annotated in the margin](docs/hero.png)
+
 ## How it works
 
 You write on the page. When you pause for 2.8 seconds (or tap the wax seal), the ink dissolves into the paper — and that dissolve *is* the loading state, because the request is already in flight. Your words come back transcribed into the manuscript, and a persona annotates them in the margin, in its own hand.
@@ -23,6 +25,8 @@ Summon one by drawing its glyph in the left margin, or by pressing a wax stamp o
 | `#` | **The Timekeeper** | Speaking-time estimate and what to trim |
 
 Each persona writes in a distinct hand and ink colour, so you know who answered before you read a word.
+
+![The legend tucked inside the cover, each persona introduced in its own hand](docs/personas.png)
 
 ### What you can do with a beat
 
