@@ -1,0 +1,43 @@
+<div class="shelf">
+  <header>
+    <h1>Enchanted Notes</h1>
+    <p class="tagline">Your notebook writes back.</p>
+  </header>
+
+  <form class="new-talk" (ngSubmit)="create()">
+    <input
+      name="title"
+      [(ngModel)]="title"
+      placeholder="Talk title — e.g. Signals in Anger"
+      autocomplete="off"
+      required
+    />
+    <input
+      name="targetMinutes"
+      type="number"
+      min="1"
+      max="180"
+      [(ngModel)]="targetMinutes"
+      placeholder="min"
+      class="minutes"
+    />
+    <button type="submit" [disabled]="creating() || !title.trim()">
+      Summon notebook
+    </button>
+  </form>
+
+  <ul class="talks">
+    @for (nb of store.notebooks(); track nb.id) {
+      <li (click)="open(nb.id)" (keydown.enter)="open(nb.id)" tabindex="0">
+        <span class="spine-band"></span>
+        <span class="talk-title">{{ nb.title }}</span>
+        @if (nb.targetMinutes) {
+          <span class="talk-minutes">{{ nb.targetMinutes }} min</span>
+        }
+        <button class="burn" (click)="remove($event, nb.id)" title="Delete">✕</button>
+      </li>
+    } @empty {
+      <li class="empty">No notebooks yet. Summon one above.</li>
+    }
+  </ul>
+</div>

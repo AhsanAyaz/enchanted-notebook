@@ -1,0 +1,406 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.paper {
+  position: relative;
+  height: 100%;
+  background: #fdf6e3;
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 31px,
+    rgba(140, 110, 60, 0.16) 32px
+  );
+  overflow: hidden;
+}
+
+.manuscript {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  padding: 1.5rem 4.5rem 6rem 1.75rem; /* right padding clears the rail */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.beat-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(180px, 26vw, 260px);
+  column-gap: 1.25rem;
+  align-items: start;
+
+  @media (max-width: 640px) {
+    grid-template-columns: minmax(0, 1fr);
+
+    .margin {
+      padding-left: 1.5rem;
+    }
+  }
+}
+
+.beat-text,
+.annotation,
+.persona-badge {
+  &[data-font='caveat'] {
+    font-family: 'Caveat', cursive;
+  }
+  &[data-font='dancing-script'] {
+    font-family: 'Dancing Script', cursive;
+  }
+  &[data-font='shadows-into-light'] {
+    font-family: 'Shadows Into Light', cursive;
+  }
+}
+
+.beat {
+  min-width: 0;
+
+  .beat-text {
+    margin: 0;
+    font-family: 'Caveat', cursive;
+    font-size: 1.7rem;
+    line-height: 1.35;
+    color: #2f2f33;
+    white-space: pre-wrap;
+
+    &.woven {
+      margin-top: 0.4rem;
+      padding-left: 1.1rem;
+      border-left: 2px solid rgba(91, 58, 140, 0.35);
+      color: #4a3f66;
+
+      .woven-mark {
+        color: #5b3a8c;
+        opacity: 0.7;
+        margin-right: 0.4rem;
+      }
+    }
+
+    &.struck {
+      position: relative;
+      color: #8a8578;
+      text-decoration: line-through;
+      text-decoration-color: rgba(60, 50, 40, 0.55);
+      text-decoration-thickness: 2px;
+      font-size: 1.25rem;
+      margin-bottom: 0.35rem;
+
+      &.striking {
+        text-decoration: none;
+        animation: strike 0.5s ease-out forwards;
+      }
+    }
+  }
+
+  .beat-surface,
+  .rewrite-surface {
+    height: 160px;
+  }
+
+  .drinking {
+    font-family: 'Caveat', cursive;
+    color: #a08f6e;
+    font-size: 1.2rem;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+}
+
+.margin {
+  position: relative;
+  z-index: 3; /* interactive above the capture overlay */
+  pointer-events: auto;
+  border-left: 1px solid rgba(140, 110, 60, 0.28);
+  padding-left: 0.9rem;
+
+  .annotation {
+    margin: 0;
+    font-size: 1.15rem;
+    line-height: 1.3;
+
+    &.acceptable {
+      cursor: pointer;
+
+      &:hover .accept-stamp {
+        transform: scale(1.2);
+      }
+    }
+  }
+
+  .persona-glyph {
+    opacity: 0.6;
+    margin-right: 0.3rem;
+  }
+
+  .accept-stamp {
+    display: inline-block;
+    margin-left: 0.4rem;
+    padding: 0 0.35rem;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    transition: transform 0.15s ease;
+  }
+
+  .persona-badge {
+    font-family: 'Caveat', cursive;
+    font-size: 1.05rem;
+    margin-bottom: 0.25rem;
+
+    &.ember {
+      animation: ember 1s ease-out 1;
+    }
+  }
+
+  .reply-surface {
+    height: 200px;
+  }
+
+  .beat-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.4rem;
+  }
+
+  .copy-btn,
+  .restore-btn {
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  .beat-row:hover & .copy-btn,
+  .beat-row:hover & .restore-btn,
+  .copy-btn:focus-visible,
+  .restore-btn:focus-visible {
+    opacity: 1;
+  }
+
+  .copy-btn,
+  .restore-btn,
+  .replay-btn,
+  .burn-btn {
+    border: none;
+    background: none;
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: #a08f6e;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      color: #6d3b1f;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+  }
+
+  .replay-btn.conjuring {
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+
+  .burn-btn:hover {
+    color: #8c2f1b;
+  }
+}
+
+.capture-surface {
+  position: absolute;
+  inset: 0;
+  right: 16px; /* keep the manuscript scrollbar clickable */
+  z-index: 2;
+  touch-action: none;
+}
+
+.rail {
+  position: absolute;
+  top: 50%;
+  right: 0.6rem;
+  transform: translateY(-50%);
+  z-index: 4;
+}
+
+.mode-slot {
+  position: absolute;
+  left: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 5; /* above the desk, or the tip hides behind it */
+  display: flex;
+  align-items: center;
+
+  .mode-tip {
+    position: absolute;
+    left: 60px;
+    white-space: nowrap;
+    background: #fdf6e3;
+    color: #6d3b1f;
+    border: 1.5px solid rgba(109, 59, 31, 0.55);
+    border-radius: 999px;
+    padding: 0.15rem 0.7rem;
+    font-family: 'Caveat', cursive;
+    font-size: 1.05rem;
+    box-shadow: 1px 2px 5px rgba(60, 40, 20, 0.2);
+    opacity: 0;
+    transform: translateX(-6px);
+    transition:
+      opacity 0.15s ease,
+      transform 0.15s ease;
+    pointer-events: none;
+  }
+
+  &:hover .mode-tip,
+  &:focus-within .mode-tip {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.mode-toggle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(109, 59, 31, 0.45);
+  background: #fdf6e3;
+  color: #6d3b1f;
+  font-size: 1.7rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 1px 2px 5px rgba(60, 40, 20, 0.25);
+
+  &:hover {
+    border-color: #6d3b1f;
+  }
+}
+
+.desk {
+  position: absolute;
+  left: 5rem;
+  right: 5.5rem;
+  bottom: 1.1rem;
+  z-index: 4;
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-end;
+  background: rgba(253, 246, 227, 0.96);
+  border: 1px solid rgba(140, 110, 60, 0.4);
+  border-radius: 12px;
+  padding: 0.6rem 0.75rem;
+  box-shadow: 0 4px 14px rgba(60, 40, 20, 0.2);
+
+  textarea {
+    flex: 1;
+    border: none;
+    background: none;
+    resize: none;
+    outline: none;
+    font-family: 'Caveat', cursive;
+    font-size: 1.35rem;
+    line-height: 1.3;
+    /* cursive glyphs overhang their advance width — breathing room so the
+       caret doesn't sit on top of the last character */
+    letter-spacing: 0.06em;
+    caret-color: #6d3b1f;
+    color: #2f2f33;
+  }
+
+  .desk-send {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    background: radial-gradient(circle at 35% 30%, #b8452c, #7c1f10 70%);
+    color: #f7e2c0;
+    font-size: 1.15rem;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+  }
+}
+
+.wax-seal {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 4;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: radial-gradient(circle at 35% 30%, #b8452c, #7c1f10 70%);
+  color: #f7e2c0;
+  font-size: 1.5rem;
+  box-shadow: 0 3px 8px rgba(60, 20, 5, 0.4);
+  cursor: pointer;
+
+  &:active {
+    transform: scale(0.94);
+  }
+}
+
+.toast {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  background: rgba(59, 47, 30, 0.92);
+  color: #f2e6c8;
+  font-family: 'Caveat', cursive;
+  font-size: 1.2rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  pointer-events: none;
+  animation: toast-in 0.25s ease-out;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes strike {
+  from {
+    text-decoration: line-through;
+    text-decoration-color: transparent;
+  }
+  to {
+    text-decoration: line-through;
+    text-decoration-color: rgba(60, 50, 40, 0.55);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes ember {
+  0% {
+    text-shadow: 0 0 0 rgba(255, 120, 30, 0);
+  }
+  35% {
+    text-shadow:
+      0 0 12px rgba(255, 120, 30, 0.9),
+      0 0 24px rgba(255, 180, 60, 0.5);
+  }
+  100% {
+    text-shadow: 0 0 0 rgba(255, 120, 30, 0);
+  }
+}

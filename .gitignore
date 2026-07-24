@@ -1,0 +1,22 @@
+node_modules
+dist
+tmp
+/out-tsc
+.nx/cache
+.nx/workspace-data
+
+.env
+apps/enchanted-notes-api/storage
+
+.DS_Store
+*.log
+.angular
+
+__screenshots__/
+
+vitest.config.*.timestamp*
+
+# test/debug artifacts
+.playwright-mcp/
+for_llm/
+*.mp4

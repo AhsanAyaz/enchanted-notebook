@@ -1,0 +1,127 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+  background: #efe6d5;
+}
+
+.shelf {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-family: 'Caveat', cursive;
+    font-size: 3rem;
+    color: #3b2f1e;
+    margin: 0;
+  }
+
+  .tagline {
+    color: #7a6a4f;
+    margin: 0.25rem 0 0;
+    font-style: italic;
+  }
+}
+
+.new-talk {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+
+  input {
+    flex: 1;
+    padding: 0.65rem 0.9rem;
+    border: 1px solid #c9b993;
+    border-radius: 6px;
+    background: #fdf6e3;
+    font-size: 1rem;
+
+    &.minutes {
+      flex: 0 0 5rem;
+    }
+  }
+
+  button {
+    padding: 0.65rem 1.1rem;
+    border: none;
+    border-radius: 6px;
+    background: #6d3b1f;
+    color: #fdf6e3;
+    font-size: 1rem;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+  }
+}
+
+.talks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.1rem;
+    background: #fdf6e3;
+    border: 1px solid #d9c9a3;
+    border-radius: 8px;
+    box-shadow: 2px 3px 0 rgba(59, 47, 30, 0.12);
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+
+    &.empty {
+      justify-content: center;
+      color: #a08f6e;
+      cursor: default;
+      box-shadow: none;
+    }
+  }
+
+  .spine-band {
+    width: 8px;
+    align-self: stretch;
+    border-radius: 4px;
+    background: #8c2f1b;
+  }
+
+  .talk-title {
+    font-family: 'Caveat', cursive;
+    font-size: 1.5rem;
+    color: #3b2f1e;
+    flex: 1;
+  }
+
+  .talk-minutes {
+    color: #7a6a4f;
+    font-size: 0.9rem;
+  }
+
+  .burn {
+    border: none;
+    background: none;
+    color: #b09a72;
+    font-size: 1rem;
+    cursor: pointer;
+
+    &:hover {
+      color: #8c2f1b;
+    }
+  }
+}

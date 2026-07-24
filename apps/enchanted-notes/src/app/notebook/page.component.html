@@ -1,0 +1,197 @@
+<div
+  class="paper"
+  #paper
+  (wheel)="onWheel($event)"
+  (contextmenu)="onContextMenu($event)"
+>
+  <div class="manuscript" #manuscript>
+    @for (turn of turns(); track turn.id) {
+      <div class="beat-row">
+        <div class="beat">
+          @if (turn.rewriteAccepted && turn.persona === 'editor') {
+            <p class="beat-text struck" data-font="caveat">
+              {{ turn.transcript }}
+            </p>
+          }
+          @if (accepting()?.turnId === turn.id) {
+            @if (turn.persona === 'editor') {
+              <p class="beat-text struck striking" data-font="caveat">
+                {{ turn.transcript }}
+              </p>
+            } @else {
+              <p class="beat-text" data-font="caveat">
+                {{ turn.beatText || turn.transcript }}
+              </p>
+            }
+            <quill-ink
+              class="rewrite-surface"
+              [text]="accepting()?.text"
+              [options]="userHandOptions"
+              (writeDone)="onRewriteInked(turn)"
+            />
+          } @else if (wovenPart(turn); as woven) {
+            <p class="beat-text" data-font="caveat">{{ turn.transcript }}</p>
+            <p class="beat-text woven" data-font="caveat">
+              <span class="woven-mark">*</span>{{ woven }}
+            </p>
+          } @else {
+            <p
+              class="beat-text"
+              [class.rewritten]="turn.rewriteAccepted"
+              data-font="caveat"
+            >
+              {{ turn.beatText || turn.transcript }}
+            </p>
+          }
+        </div>
+
+        <aside class="margin">
+          <p
+            class="annotation"
+            [class.acceptable]="canAccept(turn)"
+            [style.color]="turn.meta.inkColor"
+            [attr.data-font]="turn.meta.font"
+            (click)="acceptRewrite(turn)"
+          >
+            <span class="persona-glyph">{{ turn.meta.glyph }}</span>
+            {{ turn.replyText }}
+            @if (canAccept(turn)) {
+              <span
+                class="accept-stamp"
+                [title]="
+                  turn.persona === 'editor'
+                    ? 'Accept — re-ink your line'
+                    : 'Weave this into your beat'
+                "
+                >✓</span
+              >
+            }
+          </p>
+          <div class="beat-actions">
+            <button
+              class="copy-btn"
+              (click)="copyBeat(turn)"
+              title="Copy your words"
+            >
+              ⧉ copy
+            </button>
+            @if (canRestore(turn)) {
+              <button
+                class="restore-btn"
+                (click)="restoreRewrite(turn)"
+                title="Undo — bring your original words back"
+              >
+                ↩ restore
+              </button>
+            }
+            <button
+              class="replay-btn"
+              [disabled]="!replay.supported || exporting() !== null"
+              [class.conjuring]="exporting() === turn.id"
+              (click)="exportReplay(turn)"
+              title="Records this moment as a ~10s shareable video"
+            >
+              {{ exporting() === turn.id ? 'conjuring…' : '▷ replay' }}
+            </button>
+            <button
+              class="burn-btn"
+              (click)="deleteTurn(turn)"
+              title="Burn this beat — removes it from the notebook"
+            >
+              ✕
+            </button>
+          </div>
+        </aside>
+      </div>
+    }
+
+    @if (pending(); as p) {
+      <div class="beat-row pending">
+        <div class="beat">
+          @if (p.status === 'inFlight') {
+            <div class="drinking">the page drinks your ink…</div>
+          }
+          @if (p.persona) {
+            <quill-ink
+              class="beat-surface"
+              [text]="p.transcript"
+              [options]="userHandOptions"
+            />
+          }
+        </div>
+        <aside class="margin">
+          @if (p.persona; as persona) {
+            <div
+              class="persona-badge ember"
+              [style.color]="personaMeta(persona).inkColor"
+            >
+              {{ personaMeta(persona).glyph }} {{ personaMeta(persona).label }}
+            </div>
+            <quill-ink
+              class="reply-surface"
+              [stream]="p.sentences"
+              [options]="personaOptions(persona)"
+              (writeDone)="onReplyDone()"
+            />
+          }
+        </aside>
+      </div>
+    }
+  </div>
+
+  @if (mode() === 'ink') {
+    <quill-ink
+      #captureSurface
+      class="capture-surface"
+      [captureMode]="true"
+      [captureOptions]="{ commitAfterMs: 2800 }"
+      (inkCommitted)="onInk($event)"
+    />
+  }
+
+  <en-persona-rail
+    class="rail"
+    [(selected)]="railPersona"
+  />
+
+  <div class="mode-slot">
+    <span class="mode-tip">
+      {{ mode() === 'ink' ? 'No stylus? Switch to typing' : 'Back to the pen' }}
+    </span>
+    <button
+      class="mode-toggle"
+      (click)="mode.set(mode() === 'ink' ? 'type' : 'ink')"
+      [attr.aria-label]="mode() === 'ink' ? 'Switch to typing' : 'Back to the pen'"
+    >
+      {{ mode() === 'ink' ? '⌨️' : '✒️' }}
+    </button>
+  </div>
+
+  @if (mode() === 'type' && !pending()) {
+    <div class="desk">
+      <textarea
+        rows="2"
+        placeholder="No quill at hand? Type your thought…"
+        [value]="typedText()"
+        (input)="typedText.set($any($event.target).value)"
+        (keydown.enter)="$event.preventDefault(); submitTyped()"
+      ></textarea>
+      <button
+        class="desk-send"
+        [disabled]="!typedText().trim() || pending() !== null"
+        (click)="submitTyped()"
+        title="Seal it — send to the notebook"
+      >
+        ✦
+      </button>
+    </div>
+  } @else {
+    <button class="wax-seal" (click)="commitNow()" title="Seal the page — send now">
+      ✦
+    </button>
+  }
+
+  @if (toast(); as message) {
+    <div class="toast">{{ message }}</div>
+  }
+</div>

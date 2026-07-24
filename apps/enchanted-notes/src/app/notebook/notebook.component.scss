@@ -1,0 +1,109 @@
+:host {
+  display: block;
+  height: 100dvh;
+  background: #4b3a28;
+  overflow: hidden;
+}
+
+.notebook {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  color: #e8dcc2;
+
+  h2 {
+    flex: 1;
+    margin: 0;
+    font-family: 'Caveat', cursive;
+    font-size: 1.6rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .time-estimate {
+    font-family: 'Shadows Into Light', cursive;
+    color: #cfc4a8;
+    font-size: 1.1rem;
+    white-space: nowrap;
+  }
+
+  .pager {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+
+    .tear:hover:not(:disabled) {
+      color: #e08b6d;
+    }
+  }
+
+  .ghost {
+    border: none;
+    background: none;
+    color: #e8dcc2;
+    font-size: 1rem;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+  }
+
+  .legend-btn {
+    width: 26px;
+    height: 26px;
+    border: 1.5px solid rgba(232, 220, 194, 0.5);
+    border-radius: 50%;
+    font-family: 'Caveat', cursive;
+    font-size: 1.05rem;
+    line-height: 1;
+
+    &:hover {
+      border-color: #e8dcc2;
+    }
+  }
+}
+
+.binding {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  margin: 0 0.75rem 0.75rem;
+  perspective: 1600px;
+}
+
+.spine {
+  width: 18px;
+  border-radius: 8px 0 0 8px;
+  background: linear-gradient(90deg, #2c2014, #5a422c);
+  box-shadow: inset -3px 0 5px rgba(0, 0, 0, 0.4);
+}
+
+.page-holder {
+  flex: 1;
+  min-width: 0;
+  border-radius: 0 8px 8px 0;
+  overflow: hidden;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  transform-origin: left center;
+  transition: transform 0.3s ease;
+
+  &.turn-forward {
+    transform: rotateY(-28deg);
+  }
+
+  &.turn-back {
+    transform: rotateY(10deg);
+  }
+}

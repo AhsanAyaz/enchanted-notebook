@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Notebook {
+  id            String   @id @default(cuid())
+  userId        String
+  title         String
+  targetMinutes Int?
+  createdAt     DateTime @default(now())
+  pages         Page[]
+
+  @@index([userId])
+}
+
+model Page {
+  id         String   @id @default(cuid())
+  notebookId String
+  index      Int
+  notebook   Notebook @relation(fields: [notebookId], references: [id], onDelete: Cascade)
+  turns      Turn[]
+
+  @@unique([notebookId, index])
+}
+
+model Turn {
+  id         String   @id @default(cuid())
+  pageId     String
+  seq        Int
+  source     String   @default("pen")
+  userPngUrl String
+  transcript String
+  glyph      String?
+  persona         String
+  replyText       String
+  beatText        String  @default("")
+  rewriteAccepted Boolean @default(false)
+  latencyMs       Int?
+  createdAt  DateTime @default(now())
+  page       Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@unique([pageId, seq])
+}

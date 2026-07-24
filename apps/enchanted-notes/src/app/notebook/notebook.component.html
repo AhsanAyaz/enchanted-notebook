@@ -1,0 +1,48 @@
+<div class="notebook">
+  <header class="toolbar">
+    <button class="ghost" (click)="back()">← talks</button>
+    <h2>{{ store.activeNotebook()?.title }}</h2>
+    @if (store.totalMinutes() > 0) {
+      <span class="time-estimate" title="Timekeeper's running estimate">
+        ~{{ store.totalMinutes() }} min
+      </span>
+    }
+    <div class="pager">
+      <button class="ghost" (click)="prevPage()" [disabled]="store.activePageIndex() === 0">‹</button>
+      <span>{{ pageLabel() }}</span>
+      <button class="ghost" (click)="nextPage()">›</button>
+      <button
+        class="ghost tear"
+        (click)="tearOutPage()"
+        [disabled]="store.pages().length <= 1"
+        title="Tear out this page"
+      >
+        ⌫
+      </button>
+    </div>
+    <button
+      class="ghost legend-btn"
+      (click)="openLegend()"
+      title="How the enchantment works"
+    >
+      ?
+    </button>
+  </header>
+
+  <div class="binding">
+    <div class="spine"></div>
+    <div
+      class="page-holder"
+      [class.turn-forward]="turning() === 'forward'"
+      [class.turn-back]="turning() === 'back'"
+    >
+      @if (store.activePage(); as page) {
+        <en-page [pageId]="page.id" />
+      }
+    </div>
+  </div>
+
+  @if (legendOpen()) {
+    <en-legend (closed)="closeLegend()" />
+  }
+</div>

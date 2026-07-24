@@ -1,0 +1,91 @@
+{
+  "name": "enchanted-notes",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "en",
+  "sourceRoot": "apps/enchanted-notes/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular/build:application",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/enchanted-notes",
+        "browser": "apps/enchanted-notes/src/main.ts",
+        "tsConfig": "apps/enchanted-notes/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/enchanted-notes/public"
+          }
+        ],
+        "styles": [
+          "apps/enchanted-notes/src/styles.scss"
+        ]
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "1.5mb",
+              "maximumError": "2.5mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      }
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@angular/build:dev-server",
+      "defaultConfiguration": "development",
+      "configurations": {
+        "production": {
+          "buildTarget": "enchanted-notes:build:production"
+        },
+        "development": {
+          "buildTarget": "enchanted-notes:build:development"
+        }
+      },
+      "options": {
+        "proxyConfig": "apps/enchanted-notes/proxy.conf.json",
+        "port": 4400,
+        "host": "0.0.0.0",
+        "allowedHosts": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {
+        "watch": false
+      }
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "enchanted-notes:build",
+        "staticFilePath": "dist/apps/enchanted-notes/browser",
+        "spa": true
+      }
+    }
+  }
+}
